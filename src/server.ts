@@ -6,6 +6,10 @@ const PORT = config.port || 5000;
 
 async function main() {
     try {
+        if (!process.env.JWT_ACCESS_SECRET || !process.env.STRIPE_SECRET_KEY) {
+            console.warn("⚠️ Warning: Missing crucial environment variables (JWT or Stripe secrets).");
+        }
+
         await prisma.$connect();
         console.log("Connected to the database successfully");
 
