@@ -6,7 +6,7 @@ const connectionString = `${process.env.DATABASE_URL}`;
 
 const adapter = new PrismaPg({
     connectionString
-} as any); // Type assertion in case of missing types
+} as any);
 
 const prisma = new PrismaClient({
     adapter
