@@ -1,0 +1,26 @@
+enum AmbulanceType {
+  BASIC
+  ICU
+  PEDIATRIC
+}
+
+enum AmbulanceStatus {
+  AVAILABLE
+  BUSY
+  MAINTENANCE
+}
+
+model Ambulance {
+  id             Int             @id @default(autoincrement())
+  vehicleNumber  String          @unique
+  type           AmbulanceType   @default(BASIC)
+  status         AmbulanceStatus @default(AVAILABLE)
+  driverId       Int?
+  driver         User?           @relation(fields: [driverId], references: [id])
+  currentLat     Float?
+  currentLng     Float?
+  dispatches     Dispatch[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  deletedAt      DateTime?
+}

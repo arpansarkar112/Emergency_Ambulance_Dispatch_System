@@ -1,0 +1,33 @@
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum RequestStatus {
+  PENDING
+  ASSIGNED
+  EN_ROUTE
+  PICKED_UP
+  COMPLETED
+  CANCELLED
+}
+
+model EmergencyRequest {
+  id              Int           @id @default(autoincrement())
+  patientId       Int
+  patient         User          @relation(fields: [patientId], references: [id])
+  patientPhone    String
+  pickupLat       Float
+  pickupLng       Float
+  destinationLat  Float?
+  destinationLng  Float?
+  priority        Priority      @default(MEDIUM)
+  status          RequestStatus @default(PENDING)
+  dispatches      Dispatch[]
+  payments        Payment[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  deletedAt       DateTime?
+}

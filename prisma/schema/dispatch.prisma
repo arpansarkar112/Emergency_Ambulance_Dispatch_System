@@ -1,0 +1,22 @@
+enum DispatchStatus {
+  PENDING
+  EN_ROUTE
+  COMPLETED
+  CANCELLED
+}
+
+model Dispatch {
+  id             Int              @id @default(autoincrement())
+  requestId      Int
+  request        EmergencyRequest @relation(fields: [requestId], references: [id])
+  ambulanceId    Int
+  ambulance      Ambulance        @relation(fields: [ambulanceId], references: [id])
+  driverId       Int
+  driver         User             @relation(fields: [driverId], references: [id])
+  dispatchTime   DateTime         @default(now())
+  arrivalTime    DateTime?
+  completionTime DateTime?
+  status         DispatchStatus   @default(PENDING)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}

@@ -1,8 +1,21 @@
+enum Role {
+  ADMIN
+  PATIENT
+  DRIVER
+}
+
 model User {
-    id        Int      @id @default(autoincrement())
-    email     String   @unique
-    password  String
-    profile   Profile?
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  password  String
+  role      Role      @default(PATIENT)
+  isVerified Boolean  @default(false)
+  profile   Profile?
+  ambulances Ambulance[]
+  requests  EmergencyRequest[]
+  dispatches Dispatch[]
+  auditLogs AuditLog[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 }
