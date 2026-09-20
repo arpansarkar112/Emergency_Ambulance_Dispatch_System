@@ -1,5 +1,5 @@
 import { Router } from "express";
-// import authRoutes from "./auth.routes";
+import authRoutes from "./auth.routes";
 // import userRoutes from "./user.routes";
 // import ambulanceRoutes from "./ambulance.routes";
 // import requestRoutes from "./request.routes";
@@ -8,7 +8,7 @@ import { Router } from "express";
 
 const router = Router();
 
-// router.use("/auth", authRoutes);
+router.use("/auth", authRoutes);
 // router.use("/users", userRoutes);
 // router.use("/ambulances", ambulanceRoutes);
 // router.use("/requests", requestRoutes);
