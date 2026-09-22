@@ -19,7 +19,12 @@ const generateTokens = (userId: number, role: Role) => {
 
 export const registerUser = async (data: any) => {
   const existingUser = await prisma.user.findUnique({ where: { email: data.email } });
-  if (existingUser) throw Object.assign(new Error("Email already in use"), { statusCode: 400 });
+  if (existingUser) {
+    if (existingUser.deletedAt) {
+      throw Object.assign(new Error("Account is disabled. Please contact support."), { statusCode: 403 });
+    }
+    throw Object.assign(new Error("Email already in use"), { statusCode: 400 });
+  }
 
   const hashedPassword = await bcrypt.hash(data.password, Number(config.bcrypt_salt_rounds));
 
@@ -44,6 +49,11 @@ export const registerUser = async (data: any) => {
 export const loginUser = async (data: any) => {
   const user = await prisma.user.findUnique({ where: { email: data.email } });
   if (!user) throw Object.assign(new Error("Invalid credentials"), { statusCode: 401 });
+  if (user.deletedAt) throw Object.assign(new Error("Account is disabled. Please contact support."), { statusCode: 403 });
+  
+  if (!user.password || user.password === "") {
+    throw Object.assign(new Error("Please login with Google."), { statusCode: 400 });
+  }
 
   const isMatch = await bcrypt.compare(data.password, user.password);
   if (!isMatch) throw Object.assign(new Error("Invalid credentials"), { statusCode: 401 });
@@ -70,6 +80,10 @@ export const socialLogin = async (idToken: string) => {
 
   const { email, given_name, family_name } = payload;
   let user = await prisma.user.findUnique({ where: { email } });
+
+  if (user && user.deletedAt) {
+    throw Object.assign(new Error("Account is disabled. Please contact support."), { statusCode: 403 });
+  }
 
   if (!user) {
     user = await prisma.user.create({
