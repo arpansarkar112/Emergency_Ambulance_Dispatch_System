@@ -17,6 +17,6 @@ router.get("/", getAll);
 router.get("/:id", getOne);
 
 // Admin and Driver can update (Driver updates location/status)
-router.patch("/:id", authorize("ADMIN", "DRIVER"), validateRequest(updateAmbulanceSchema), update);
+router.patch("/", authorize("ADMIN", "DRIVER"), validateRequest(updateAmbulanceSchema), update);
 
 export default router;

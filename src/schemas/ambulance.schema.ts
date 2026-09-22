@@ -12,6 +12,7 @@ export const createAmbulanceSchema = z.object({
 
 export const updateAmbulanceSchema = z.object({
   body: z.object({
+    ambulanceId: z.number().int("Ambulance ID is required"),
     status: z.enum(["AVAILABLE", "BUSY", "MAINTENANCE"]).optional(),
     currentLat: z.number().optional(),
     currentLng: z.number().optional(),

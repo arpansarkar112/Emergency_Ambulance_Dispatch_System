@@ -13,6 +13,7 @@ export const createRequestSchema = z.object({
 
 export const updateRequestStatusSchema = z.object({
   body: z.object({
+    requestId: z.number().int("Request ID is required"),
     status: z.enum(["ASSIGNED", "EN_ROUTE", "PICKED_UP", "COMPLETED", "CANCELLED"]),
   })
 });

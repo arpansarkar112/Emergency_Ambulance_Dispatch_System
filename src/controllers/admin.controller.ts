@@ -13,7 +13,8 @@ export const stats = async (req: Request, res: Response, next: NextFunction) => 
 
 export const changeRole = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const user = await adminService.changeUserRole(Number(req.params.id), req.body.role);
+    const { userId, role } = req.body;
+    const user = await adminService.changeUserRole(userId, role);
     sendSuccess(res, 200, "User role updated", user);
   } catch (error) {
     next(error);

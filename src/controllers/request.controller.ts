@@ -44,7 +44,8 @@ export const assign = async (req: Request, res: Response, next: NextFunction) =>
 
 export const updateStatus = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await requestService.updateStatus(Number(req.params.id), req.body.status, req.user!.userId);
+    const { requestId, status } = req.body;
+    const result = await requestService.updateStatus(requestId, status, req.user!.userId);
     sendSuccess(res, 200, "Request status updated", result);
   } catch (error) {
     next(error);

@@ -30,14 +30,18 @@
       "listen": "prerequest",
       "script": {
         "type": "text/javascript",
-        "exec": [""]
+        "exec": [
+          ""
+        ]
       }
     },
     {
       "listen": "test",
       "script": {
         "type": "text/javascript",
-        "exec": [""]
+        "exec": [
+          ""
+        ]
       }
     }
   ],
@@ -78,8 +82,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/login",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "login"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
             }
           }
         },
@@ -116,8 +125,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/register",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "register"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
             }
           }
         },
@@ -140,8 +154,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/auth/social-login",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "social-login"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "social-login"
+              ]
             }
           }
         }
@@ -157,8 +176,13 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/users/me",
-              "host": ["{{baseUrl}}"],
-              "path": ["users", "me"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "me"
+              ]
             }
           }
         },
@@ -178,8 +202,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/users/me",
-              "host": ["{{baseUrl}}"],
-              "path": ["users", "me"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "me"
+              ]
             }
           }
         },
@@ -190,8 +219,12 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/users?page=1&limit=10",
-              "host": ["{{baseUrl}}"],
-              "path": ["users"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ],
               "query": [
                 {
                   "key": "page",
@@ -226,8 +259,12 @@
             },
             "url": {
               "raw": "{{baseUrl}}/ambulances",
-              "host": ["{{baseUrl}}"],
-              "path": ["ambulances"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "ambulances"
+              ]
             }
           }
         },
@@ -238,8 +275,12 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/ambulances?status=AVAILABLE",
-              "host": ["{{baseUrl}}"],
-              "path": ["ambulances"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "ambulances"
+              ],
               "query": [
                 {
                   "key": "status",
@@ -256,7 +297,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"status\": \"BUSY\",\n  \"currentLat\": 23.8103,\n  \"currentLng\": 90.4125\n}",
+              "raw": "{\n  \"ambulanceId\": 1,\n  \"status\": \"BUSY\",\n  \"currentLat\": 23.8103,\n  \"currentLng\": 90.4125\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -264,9 +305,13 @@
               }
             },
             "url": {
-              "raw": "{{baseUrl}}/ambulances/1",
-              "host": ["{{baseUrl}}"],
-              "path": ["ambulances", "1"]
+              "raw": "{{baseUrl}}/ambulances",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "ambulances"
+              ]
             }
           }
         }
@@ -291,8 +336,12 @@
             },
             "url": {
               "raw": "{{baseUrl}}/requests",
-              "host": ["{{baseUrl}}"],
-              "path": ["requests"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "requests"
+              ]
             }
           }
         },
@@ -303,8 +352,12 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/requests",
-              "host": ["{{baseUrl}}"],
-              "path": ["requests"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "requests"
+              ]
             }
           }
         },
@@ -324,8 +377,14 @@
             },
             "url": {
               "raw": "{{baseUrl}}/requests/1/assign",
-              "host": ["{{baseUrl}}"],
-              "path": ["requests", "1", "assign"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "requests",
+                "1",
+                "assign"
+              ]
             }
           }
         },
@@ -336,7 +395,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"status\": \"EN_ROUTE\"\n}",
+              "raw": "{\n  \"requestId\": 1,\n  \"status\": \"EN_ROUTE\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -344,9 +403,14 @@
               }
             },
             "url": {
-              "raw": "{{baseUrl}}/requests/1/status",
-              "host": ["{{baseUrl}}"],
-              "path": ["requests", "1", "status"]
+              "raw": "{{baseUrl}}/requests/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "requests",
+                "status"
+              ]
             }
           }
         }
@@ -371,8 +435,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/payments/initiate",
-              "host": ["{{baseUrl}}"],
-              "path": ["payments", "initiate"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payments",
+                "initiate"
+              ]
             }
           }
         },
@@ -383,8 +452,13 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/payments/1",
-              "host": ["{{baseUrl}}"],
-              "path": ["payments", "1"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payments",
+                "1"
+              ]
             }
           }
         }
@@ -400,8 +474,13 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/admin/dashboard-stats",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "dashboard-stats"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "dashboard-stats"
+              ]
             }
           }
         },
@@ -412,7 +491,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"role\": \"DRIVER\"\n}",
+              "raw": "{\n  \"userId\": 2,\n  \"role\": \"DRIVER\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -420,9 +499,15 @@
               }
             },
             "url": {
-              "raw": "{{baseUrl}}/admin/users/2/role",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "users", "2", "role"]
+              "raw": "{{baseUrl}}/admin/users/role",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "users",
+                "role"
+              ]
             }
           }
         },
@@ -433,8 +518,13 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/admin/audit-logs",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "audit-logs"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "audit-logs"
+              ]
             }
           }
         }

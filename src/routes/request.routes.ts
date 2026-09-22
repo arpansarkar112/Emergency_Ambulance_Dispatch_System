@@ -20,6 +20,6 @@ router.get("/:id", getOne);
 router.patch("/:id/assign", authorize("ADMIN"), validateRequest(assignRequestSchema), assign);
 
 // Driver Action
-router.patch("/:id/status", authorize("DRIVER"), validateRequest(updateRequestStatusSchema), updateStatus);
+router.patch("/status", authorize("DRIVER"), validateRequest(updateRequestStatusSchema), updateStatus);
 
 export default router;
