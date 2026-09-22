@@ -7,40 +7,55 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
   apiVersion: "2026-08-26.dahlia" as any,
 });
 
-export const initiatePayment = async (patientId: string, requestId: string, amount: number) => {
-  const request = await prisma.emergencyRequest.findFirst({ where: { id: requestId, patientId } });
+export const createPaymentByAdmin = async (requestId: string, amount: number) => {
+  const request = await prisma.emergencyRequest.findUnique({ where: { id: requestId } });
   if (!request) throw Object.assign(new Error("Request not found"), { statusCode: 404 });
+  
+  return await prisma.payment.create({
+    data: {
+      requestId,
+      patientId: request.patientId,
+      amount,
+      status: PaymentStatus.PENDING,
+      paymentGateway: "Stripe"
+    }
+  });
+};
+
+export const initiatePayment = async (patientId: string, patientEmail: string, requestId: string) => {
+  const payment = await prisma.payment.findFirst({ 
+    where: { requestId, patientId, status: PaymentStatus.PENDING } 
+  });
+  
+  if (!payment) {
+    throw Object.assign(new Error("No pending payment found for this request. Please wait for admin to generate the bill."), { statusCode: 404 });
+  }
 
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
     mode: "payment",
+    customer_email: patientEmail,
     line_items: [
       {
         price_data: {
           currency: "usd",
           product_data: { name: `Ambulance Service Request #${requestId}` },
-          unit_amount: Math.round(amount * 100),
+          unit_amount: Math.round(payment.amount * 100),
         },
         quantity: 1,
       },
     ],
     success_url: `${config.app_url}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${config.app_url}/payment/cancel`,
-    metadata: { requestId: requestId.toString(), patientId: patientId.toString() }
+    metadata: { requestId, patientId, paymentId: payment.id }
   });
 
-  await prisma.payment.create({
-    data: {
-      requestId,
-      patientId,
-      amount,
-      transactionId: session.id,
-      status: PaymentStatus.PENDING,
-      paymentGateway: "Stripe"
-    }
+  await prisma.payment.update({
+    where: { id: payment.id },
+    data: { transactionId: session.id }
   });
 
-  return { url: session.url, sessionId: session.id };
+  return { url: session.url, sessionId: session.id, paymentId: payment.id };
 };
 
 export const handleWebhook = async (payload: any, signature: string) => {

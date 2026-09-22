@@ -24,7 +24,7 @@ export const getRequests = async (page: number, limit: number, status?: string) 
     prisma.emergencyRequest.count({ where })
   ]);
 
-  return { requests, total, page, limit };
+  return { requests, total };
 };
 
 export const getRequestById = async (id: string) => {

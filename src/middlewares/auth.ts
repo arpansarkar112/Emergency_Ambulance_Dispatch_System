@@ -6,6 +6,7 @@ import { Role } from "../../generated/prisma/client";
 
 interface AuthPayload {
   userId: string;
+  email: string;
   role: Role;
 }
 

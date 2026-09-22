@@ -7,11 +7,11 @@ import { Role } from "../../generated/prisma/client";
 
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-const generateTokens = (userId: string, role: Role) => {
-  const accessToken = jwt.sign({ userId, role }, config.jwt_access_secret as string, {
+const generateTokens = (userId: string, email: string, role: Role) => {
+  const accessToken = jwt.sign({ userId, email, role }, config.jwt_access_secret as string, {
     expiresIn: config.jwt_access_expires_in as any,
   });
-  const refreshToken = jwt.sign({ userId, role }, config.jwt_refresh_secret as string, {
+  const refreshToken = jwt.sign({ userId, email, role }, config.jwt_refresh_secret as string, {
     expiresIn: config.jwt_refresh_expires_in as any,
   });
   return { accessToken, refreshToken };
@@ -58,7 +58,7 @@ export const loginUser = async (data: any) => {
   const isMatch = await bcrypt.compare(data.password, user.password);
   if (!isMatch) throw Object.assign(new Error("Invalid credentials"), { statusCode: 401 });
 
-  const tokens = generateTokens(user.id, user.role);
+  const tokens = generateTokens(user.id, user.email, user.role);
   return { user: { id: user.id, email: user.email, role: user.role }, ...tokens };
 };
 
@@ -101,6 +101,6 @@ export const socialLogin = async (idToken: string) => {
     });
   }
 
-  const tokens = generateTokens(user.id, user.role);
+  const tokens = generateTokens(user.id, user.email, user.role);
   return { user: { id: user.id, email: user.email, role: user.role }, ...tokens };
 };

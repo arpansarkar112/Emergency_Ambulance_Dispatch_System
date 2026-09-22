@@ -44,5 +44,5 @@ export const getAuditLogs = async (page: number, limit: number) => {
     prisma.auditLog.count()
   ]);
 
-  return { logs, total, page, limit };
+  return { logs, total };
 };

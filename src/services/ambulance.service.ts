@@ -25,7 +25,7 @@ export const getAmbulances = async (page: number, limit: number, status?: string
     prisma.ambulance.count({ where })
   ]);
 
-  return { ambulances, total, page, limit };
+  return { ambulances, total };
 };
 
 export const getAmbulanceById = async (id: string) => {

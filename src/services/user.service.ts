@@ -41,5 +41,5 @@ export const getAllUsers = async (page: number, limit: number, role?: string) =>
     prisma.user.count({ where })
   ]);
 
-  return { users, total, page, limit };
+  return { users, total };
 };
