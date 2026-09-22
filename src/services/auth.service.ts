@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { OAuth2Client } from "google-auth-library";
 import { prisma } from "../lib/prisma";
 import config from "../config";
-import { Role } from "../../generated/prisma/client";
+import { Role } from "@prisma/client";
 
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 

@@ -1,5 +1,5 @@
 import { prisma } from "../lib/prisma";
-import { Role } from "../../generated/prisma/client";
+import { Role } from "@prisma/client";
 
 export const getDashboardStats = async () => {
   const [totalUsers, totalAmbulances, totalRequests, totalRevenue] = await Promise.all([

@@ -1,5 +1,5 @@
 import { prisma } from "../lib/prisma";
-import { RequestStatus, AmbulanceStatus, DispatchStatus } from "../../generated/prisma/client";
+import { RequestStatus, AmbulanceStatus, DispatchStatus } from "@prisma/client";
 
 export const createEmergencyRequest = async (patientId: string, data: any) => {
   return await prisma.emergencyRequest.create({

@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import config from "../config";
 import { sendError } from "../utils/response";
-import { Role } from "../../generated/prisma/client";
+import { Role } from "@prisma/client";
 
 interface AuthPayload {
   userId: string;
