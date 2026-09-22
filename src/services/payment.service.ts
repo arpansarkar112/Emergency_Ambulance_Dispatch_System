@@ -3,7 +3,9 @@ import { prisma } from "../lib/prisma";
 import config from "../config";
 import { PaymentStatus } from "../../generated/prisma/client";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, { apiVersion: "2024-06-20" });
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
+  apiVersion: "2026-08-26.dahlia" as any,
+});
 
 export const initiatePayment = async (patientId: number, requestId: number, amount: number) => {
   const request = await prisma.emergencyRequest.findFirst({ where: { id: requestId, patientId } });

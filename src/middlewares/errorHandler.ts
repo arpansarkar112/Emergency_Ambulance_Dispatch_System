@@ -10,8 +10,8 @@ export const errorHandler = (err: any, req: Request, res: Response, next: NextFu
   if (err instanceof ZodError) {
     statusCode = 400;
     message = "Validation Error";
-    errors = err.errors.map(e => ({
-      path: e.path.join("."),
+    errors = (err.issues || []).map((e: any) => ({
+      path: Array.isArray(e.path) ? e.path.join(".") : String(e.path),
       message: e.message,
     }));
   }
