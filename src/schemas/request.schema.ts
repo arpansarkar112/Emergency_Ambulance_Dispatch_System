@@ -3,23 +3,24 @@ import { z } from "zod";
 export const createRequestSchema = z.object({
   body: z.object({
     patientPhone: z.string().min(1, "Patient phone is required"),
-    pickupLat: z.number(),
-    pickupLng: z.number(),
-    destinationLat: z.number().optional(),
-    destinationLng: z.number().optional(),
+    pickupAddress: z.string().min(1, "Pickup address is required"),
+    destinationAddress: z.string().optional(),
     priority: z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]).optional(),
   })
 });
 
 export const updateRequestStatusSchema = z.object({
   body: z.object({
-    requestId: z.number().int("Request ID is required"),
-    status: z.enum(["ASSIGNED", "EN_ROUTE", "PICKED_UP", "COMPLETED", "CANCELLED"]),
+    requestId: z.string().uuid("Request ID must be a valid UUID"),
+    status: z.string().refine(val => ["ASSIGNED", "EN_ROUTE", "PICKED_UP", "COMPLETED", "CANCELLED"].includes(val), {
+        message: "Invalid status. Expected one of ASSIGNED, EN_ROUTE, PICKED_UP, COMPLETED, CANCELLED"
+    }),
   })
 });
 
 export const assignRequestSchema = z.object({
   body: z.object({
-    ambulanceId: z.number().int(),
+    requestId: z.string().uuid("Request ID must be a valid UUID"),
+    ambulanceId: z.string().uuid("Ambulance ID must be a valid UUID"),
   })
 });

@@ -1,6 +1,6 @@
 model Profile {
-  id        Int      @id @default(autoincrement())
-  userId    Int      @unique
+  id String @id @default(uuid())
+  userId String      @unique
   user      User     @relation(fields: [userId], references: [id])
   firstName String?
   lastName  String?

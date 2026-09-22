@@ -1,10 +1,10 @@
 model AuditLog {
-  id        Int      @id @default(autoincrement())
-  userId    Int?
+  id String @id @default(uuid())
+  userId String?
   user      User?    @relation(fields: [userId], references: [id])
   action    String
   entity    String
-  entityId  Int?
+  entityId String?
   details   String?  // JSON string
   createdAt DateTime @default(now())
 }

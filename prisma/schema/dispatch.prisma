@@ -6,12 +6,12 @@ enum DispatchStatus {
 }
 
 model Dispatch {
-  id             Int              @id @default(autoincrement())
-  requestId      Int
+  id String @id @default(uuid())
+  requestId String
   request        EmergencyRequest @relation(fields: [requestId], references: [id])
-  ambulanceId    Int
+  ambulanceId String
   ambulance      Ambulance        @relation(fields: [ambulanceId], references: [id])
-  driverId       Int
+  driverId String
   driver         User             @relation(fields: [driverId], references: [id])
   dispatchTime   DateTime         @default(now())
   arrivalTime    DateTime?

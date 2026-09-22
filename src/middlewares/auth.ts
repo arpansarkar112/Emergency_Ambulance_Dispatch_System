@@ -5,7 +5,7 @@ import { sendError } from "../utils/response";
 import { Role } from "../../generated/prisma/client";
 
 interface AuthPayload {
-  userId: number;
+  userId: string;
   role: Role;
 }
 

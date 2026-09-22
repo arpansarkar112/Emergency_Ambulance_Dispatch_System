@@ -26,7 +26,7 @@ export const getAll = async (req: Request, res: Response, next: NextFunction) =>
 
 export const getOne = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const request = await requestService.getRequestById(Number(req.params.id));
+    const request = await requestService.getRequestById(req.params.id as string);
     sendSuccess(res, 200, "Request fetched", request);
   } catch (error) {
     next(error);
@@ -35,7 +35,8 @@ export const getOne = async (req: Request, res: Response, next: NextFunction) =>
 
 export const assign = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await requestService.assignAmbulance(Number(req.params.id), req.body.ambulanceId, req.user!.userId);
+    const { requestId, ambulanceId } = req.body;
+    const result = await requestService.assignAmbulance(requestId, ambulanceId, req.user!.userId);
     sendSuccess(res, 200, "Ambulance assigned successfully", result);
   } catch (error) {
     next(error);
@@ -54,7 +55,7 @@ export const updateStatus = async (req: Request, res: Response, next: NextFuncti
 
 export const cancel = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    await requestService.cancelRequest(Number(req.params.id));
+    await requestService.cancelRequest(req.params.id as string);
     sendSuccess(res, 200, "Request cancelled successfully", null);
   } catch (error) {
     next(error);

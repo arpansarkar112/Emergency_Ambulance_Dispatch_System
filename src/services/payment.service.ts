@@ -7,7 +7,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
   apiVersion: "2026-08-26.dahlia" as any,
 });
 
-export const initiatePayment = async (patientId: number, requestId: number, amount: number) => {
+export const initiatePayment = async (patientId: string, requestId: string, amount: number) => {
   const request = await prisma.emergencyRequest.findFirst({ where: { id: requestId, patientId } });
   if (!request) throw Object.assign(new Error("Request not found"), { statusCode: 404 });
 
@@ -64,7 +64,7 @@ export const handleWebhook = async (payload: any, signature: string) => {
   return true;
 };
 
-export const getPaymentStatus = async (id: number) => {
+export const getPaymentStatus = async (id: string) => {
   const payment = await prisma.payment.findUnique({ where: { id } });
   if (!payment) throw Object.assign(new Error("Payment not found"), { statusCode: 404 });
   return payment;

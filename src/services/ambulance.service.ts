@@ -1,7 +1,14 @@
 import { prisma } from "../lib/prisma";
 
 export const createAmbulance = async (data: any) => {
-  return await prisma.ambulance.create({ data });
+  try {
+    return await prisma.ambulance.create({ data });
+  } catch (err: any) {
+    if (err.code === "P2002" && err.meta?.target?.includes("vehicleNumber")) {
+      throw Object.assign(new Error("This vehicle is already registered."), { statusCode: 400 });
+    }
+    throw err;
+  }
 };
 
 export const getAmbulances = async (page: number, limit: number, status?: string) => {
@@ -21,7 +28,7 @@ export const getAmbulances = async (page: number, limit: number, status?: string
   return { ambulances, total, page, limit };
 };
 
-export const getAmbulanceById = async (id: number) => {
+export const getAmbulanceById = async (id: string) => {
   const ambulance = await prisma.ambulance.findFirst({
     where: { id, deletedAt: null },
     include: { driver: { select: { id: true, profile: true } } }
@@ -30,7 +37,7 @@ export const getAmbulanceById = async (id: number) => {
   return ambulance;
 };
 
-export const updateAmbulance = async (id: number, data: any) => {
+export const updateAmbulance = async (id: string, data: any) => {
   const ambulance = await prisma.ambulance.findFirst({ where: { id, deletedAt: null } });
   if (!ambulance) throw Object.assign(new Error("Ambulance not found"), { statusCode: 404 });
 
@@ -40,7 +47,7 @@ export const updateAmbulance = async (id: number, data: any) => {
   });
 };
 
-export const deleteAmbulance = async (id: number) => {
+export const deleteAmbulance = async (id: string) => {
   const ambulance = await prisma.ambulance.findFirst({ where: { id, deletedAt: null } });
   if (!ambulance) throw Object.assign(new Error("Ambulance not found"), { statusCode: 404 });
 

@@ -5,10 +5,10 @@ enum PaymentStatus {
 }
 
 model Payment {
-  id              Int              @id @default(autoincrement())
-  requestId       Int
+  id String @id @default(uuid())
+  requestId String
   request         EmergencyRequest @relation(fields: [requestId], references: [id])
-  patientId       Int
+  patientId String
   amount          Float
   currency        String           @default("USD")
   status          PaymentStatus    @default(PENDING)

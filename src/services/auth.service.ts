@@ -7,7 +7,7 @@ import { Role } from "../../generated/prisma/client";
 
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-const generateTokens = (userId: number, role: Role) => {
+const generateTokens = (userId: string, role: Role) => {
   const accessToken = jwt.sign({ userId, role }, config.jwt_access_secret as string, {
     expiresIn: config.jwt_access_expires_in as any,
   });

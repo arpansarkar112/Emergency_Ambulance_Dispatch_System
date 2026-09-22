@@ -25,7 +25,7 @@ export const webhook = async (req: Request, res: Response, next: NextFunction) =
 
 export const getStatus = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const payment = await paymentService.getPaymentStatus(Number(req.params.id));
+    const payment = await paymentService.getPaymentStatus(req.params.id as string);
     sendSuccess(res, 200, "Payment retrieved", payment);
   } catch (error) {
     next(error);

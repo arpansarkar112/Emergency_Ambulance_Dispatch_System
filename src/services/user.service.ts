@@ -1,6 +1,6 @@
 import { prisma } from "../lib/prisma";
 
-export const getMyProfile = async (userId: number) => {
+export const getMyProfile = async (userId: string) => {
   const user = await prisma.user.findUnique({
     where: { id: userId },
     select: {
@@ -15,7 +15,7 @@ export const getMyProfile = async (userId: number) => {
   return user;
 };
 
-export const updateMyProfile = async (userId: number, data: any) => {
+export const updateMyProfile = async (userId: string, data: any) => {
   const profile = await prisma.profile.upsert({
     where: { userId },
     update: data,

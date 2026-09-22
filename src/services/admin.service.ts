@@ -20,7 +20,7 @@ export const getDashboardStats = async () => {
   };
 };
 
-export const changeUserRole = async (userId: number, role: Role) => {
+export const changeUserRole = async (userId: string, role: Role) => {
   const user = await prisma.user.findUnique({ where: { id: userId, deletedAt: null } });
   if (!user) throw Object.assign(new Error("User not found"), { statusCode: 404 });
 

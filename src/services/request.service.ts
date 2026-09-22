@@ -1,7 +1,7 @@
 import { prisma } from "../lib/prisma";
 import { RequestStatus, AmbulanceStatus, DispatchStatus } from "../../generated/prisma/client";
 
-export const createEmergencyRequest = async (patientId: number, data: any) => {
+export const createEmergencyRequest = async (patientId: string, data: any) => {
   return await prisma.emergencyRequest.create({
     data: {
       patientId,
@@ -27,7 +27,7 @@ export const getRequests = async (page: number, limit: number, status?: string) 
   return { requests, total, page, limit };
 };
 
-export const getRequestById = async (id: number) => {
+export const getRequestById = async (id: string) => {
   const request = await prisma.emergencyRequest.findFirst({
     where: { id, deletedAt: null },
     include: {
@@ -40,7 +40,7 @@ export const getRequestById = async (id: number) => {
 };
 
 // TRANSACTION LOGIC
-export const assignAmbulance = async (requestId: number, ambulanceId: number, adminId: number) => {
+export const assignAmbulance = async (requestId: string, ambulanceId: string, adminId: string) => {
   return await prisma.$transaction(async (tx) => {
     const request = await tx.emergencyRequest.findFirst({ where: { id: requestId, deletedAt: null } });
     if (!request || request.status !== RequestStatus.PENDING) {
@@ -87,7 +87,7 @@ export const assignAmbulance = async (requestId: number, ambulanceId: number, ad
   });
 };
 
-export const updateStatus = async (id: number, status: RequestStatus, driverId: number) => {
+export const updateStatus = async (id: string, status: RequestStatus, driverId: string) => {
   return await prisma.$transaction(async (tx) => {
     const request = await tx.emergencyRequest.findFirst({
       where: { id, deletedAt: null },
@@ -117,7 +117,7 @@ export const updateStatus = async (id: number, status: RequestStatus, driverId: 
   });
 };
 
-export const cancelRequest = async (id: number) => {
+export const cancelRequest = async (id: string) => {
   // Soft delete
   return await prisma.emergencyRequest.update({
     where: { id },

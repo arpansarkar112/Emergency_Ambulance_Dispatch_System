@@ -11,14 +11,14 @@ enum AmbulanceStatus {
 }
 
 model Ambulance {
-  id             Int             @id @default(autoincrement())
+  id String @id @default(uuid())
   vehicleNumber  String          @unique
   type           AmbulanceType   @default(BASIC)
   status         AmbulanceStatus @default(AVAILABLE)
-  driverId       Int?
+  driverId String?
   driver         User?           @relation(fields: [driverId], references: [id])
-  currentLat     Float?
-  currentLng     Float?
+  currentAddress String?
+
   dispatches     Dispatch[]
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt

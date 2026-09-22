@@ -15,14 +15,14 @@ enum RequestStatus {
 }
 
 model EmergencyRequest {
-  id              Int           @id @default(autoincrement())
-  patientId       Int
+  id String @id @default(uuid())
+  patientId String
   patient         User          @relation(fields: [patientId], references: [id])
   patientPhone    String
-  pickupLat       Float
-  pickupLng       Float
-  destinationLat  Float?
-  destinationLng  Float?
+  pickupAddress String
+
+  destinationAddress String?
+
   priority        Priority      @default(MEDIUM)
   status          RequestStatus @default(PENDING)
   dispatches      Dispatch[]

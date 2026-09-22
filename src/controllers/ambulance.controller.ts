@@ -26,7 +26,7 @@ export const getAll = async (req: Request, res: Response, next: NextFunction) =>
 
 export const getOne = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const ambulance = await ambulanceService.getAmbulanceById(Number(req.params.id));
+    const ambulance = await ambulanceService.getAmbulanceById(req.params.id as string);
     sendSuccess(res, 200, "Ambulance fetched successfully", ambulance);
   } catch (error) {
     next(error);
@@ -45,7 +45,7 @@ export const update = async (req: Request, res: Response, next: NextFunction) =>
 
 export const remove = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    await ambulanceService.deleteAmbulance(Number(req.params.id));
+    await ambulanceService.deleteAmbulance(req.params.id as string);
     sendSuccess(res, 200, "Ambulance soft deleted successfully", null);
   } catch (error) {
     next(error);

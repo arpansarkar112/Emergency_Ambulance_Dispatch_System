@@ -17,7 +17,7 @@ router.get("/", authorize("ADMIN", "DRIVER"), getAll);
 router.get("/:id", getOne);
 
 // Admin Action
-router.patch("/:id/assign", authorize("ADMIN"), validateRequest(assignRequestSchema), assign);
+router.patch("/assign", authorize("ADMIN"), validateRequest(assignRequestSchema), assign);
 
 // Driver Action
 router.patch("/status", authorize("DRIVER"), validateRequest(updateRequestStatusSchema), updateStatus);
