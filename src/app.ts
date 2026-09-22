@@ -26,6 +26,10 @@ const limiter = rateLimit({
 });
 app.use("/api", limiter);
 
+// Webhook must be parsed as raw buffer before express.json()
+import { webhook } from "./controllers/payment.controller";
+app.post("/api/v1/payments/webhook", express.raw({ type: 'application/json' }), webhook);
+
 // Parsers & Logging
 app.use(morgan("dev"));
 app.use(express.json());

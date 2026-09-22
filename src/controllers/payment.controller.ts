@@ -41,3 +41,12 @@ export const getStatus = async (req: Request, res: Response, next: NextFunction)
     next(error);
   }
 };
+
+export const verifySession = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const payment = await paymentService.verifySession(req.body.sessionId);
+    sendSuccess(res, 200, "Payment verified manually", payment);
+  } catch (error) {
+    next(error);
+  }
+};

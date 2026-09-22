@@ -18,3 +18,9 @@ export const paymentStatusSchema = z.object({
     paymentId: z.string().uuid("Payment ID must be a valid UUID"),
   })
 });
+
+export const verifySessionSchema = z.object({
+  body: z.object({
+    sessionId: z.string().min(1, "Session ID is required"),
+  })
+});

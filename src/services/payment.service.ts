@@ -84,3 +84,15 @@ export const getPaymentStatus = async (id: string) => {
   if (!payment) throw Object.assign(new Error("Payment not found"), { statusCode: 404 });
   return payment;
 };
+
+export const verifySession = async (sessionId: string) => {
+  const session = await stripe.checkout.sessions.retrieve(sessionId);
+  if (session.payment_status === 'paid') {
+    await prisma.payment.updateMany({
+      where: { transactionId: sessionId },
+      data: { status: PaymentStatus.SUCCESS }
+    });
+  }
+  
+  return await prisma.payment.findFirst({ where: { transactionId: sessionId } });
+};

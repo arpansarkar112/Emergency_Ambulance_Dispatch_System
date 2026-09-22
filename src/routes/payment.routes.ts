@@ -1,14 +1,10 @@
 import { Router } from "express";
-import express from "express";
-import { adminCreatePayment, initiate, webhook, getStatus } from "../controllers/payment.controller";
+import { adminCreatePayment, initiate, getStatus, verifySession } from "../controllers/payment.controller";
 import { authenticate, authorize } from "../middlewares/auth";
 import { validateRequest } from "../middlewares/validateRequest";
-import { adminCreatePaymentSchema, initiatePaymentSchema, paymentStatusSchema } from "../schemas/payment.schema";
+import { adminCreatePaymentSchema, initiatePaymentSchema, paymentStatusSchema, verifySessionSchema } from "../schemas/payment.schema";
 
 const router = Router();
-
-// Webhook endpoint (doesn't require our auth, uses stripe signature)
-router.post("/webhook", express.raw({ type: 'application/json' }), webhook);
 
 router.use(authenticate);
 
@@ -20,5 +16,8 @@ router.post("/initiate", authorize("PATIENT"), validateRequest(initiatePaymentSc
 
 // Get payment status
 router.post("/status", validateRequest(paymentStatusSchema), getStatus);
+
+// Manually verify session (useful if webhooks aren't working locally)
+router.post("/verify-session", validateRequest(verifySessionSchema), verifySession);
 
 export default router;
