@@ -250,7 +250,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"vehicleNumber\": \"DHA-11-2233\",\n  \"type\": \"BASIC\",\n  \"driverId\": 2\n}",
+              "raw": "{\n  \"vehicleNumber\": \"DHA-11-2233\",\n  \"type\": \"BASIC\",\n  \"driverId\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"currentAddress\": \"Dhaka Medical College\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -297,7 +297,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"ambulanceId\": 1,\n  \"status\": \"BUSY\",\n  \"currentLat\": 23.8103,\n  \"currentLng\": 90.4125\n}",
+              "raw": "{\n  \"ambulanceId\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"status\": \"BUSY\",\n  \"currentAddress\": \"Gulshan, Dhaka\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -327,7 +327,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"patientPhone\": \"01811223344\",\n  \"pickupLat\": 23.75,\n  \"pickupLng\": 90.38,\n  \"priority\": \"HIGH\"\n}",
+              "raw": "{\n  \"patientPhone\": \"01811223344\",\n  \"pickupAddress\": \"Uttara Sector 7\",\n  \"destinationAddress\": \"Square Hospital\",\n  \"priority\": \"HIGH\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -341,6 +341,23 @@
               ],
               "path": [
                 "requests"
+              ]
+            }
+          }
+        },
+        {
+          "name": "List My Requests (Driver/Patient)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/requests/my-requests",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "requests",
+                "my-requests"
               ]
             }
           }
@@ -368,7 +385,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"ambulanceId\": 1\n}",
+              "raw": "{\n  \"requestId\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"ambulanceId\": \"123e4567-e89b-12d3-a456-426614174000\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -376,13 +393,12 @@
               }
             },
             "url": {
-              "raw": "{{baseUrl}}/requests/1/assign",
+              "raw": "{{baseUrl}}/requests/assign",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "requests",
-                "1",
                 "assign"
               ]
             }
@@ -395,7 +411,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"requestId\": 1,\n  \"status\": \"EN_ROUTE\"\n}",
+              "raw": "{\n  \"requestId\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"status\": \"EN_ROUTE\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -420,13 +436,39 @@
       "name": "5. Payments",
       "item": [
         {
-          "name": "Initiate Payment Checkout",
+          "name": "Create Payment Bill (Admin)",
           "request": {
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"requestId\": 1,\n  \"amount\": 50\n}",
+              "raw": "{\n  \"requestId\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"amount\": 50\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/payments/create",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payments",
+                "create"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Initiate Payment Checkout (Patient)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"requestId\": \"123e4567-e89b-12d3-a456-426614174000\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -448,16 +490,77 @@
         {
           "name": "Check Payment Status",
           "request": {
-            "method": "GET",
+            "method": "POST",
             "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentId\": \"123e4567-e89b-12d3-a456-426614174000\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
             "url": {
-              "raw": "{{baseUrl}}/payments/1",
+              "raw": "{{baseUrl}}/payments/status",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "payments",
-                "1"
+                "status"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Verify Payment Session",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"cs_test_a1yXXcYk5...\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/payments/verify-session",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payments",
+                "verify-session"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Stripe Webhook (Testing)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/payments/webhook",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payments",
+                "webhook"
               ]
             }
           }
@@ -491,7 +594,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"userId\": 2,\n  \"role\": \"DRIVER\"\n}",
+              "raw": "{\n  \"userId\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"role\": \"DRIVER\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
