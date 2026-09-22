@@ -24,6 +24,15 @@ export const getAll = async (req: Request, res: Response, next: NextFunction) =>
   }
 };
 
+export const getMyRequests = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await requestService.getRequestsByDriver(req.user!.userId);
+    sendSuccess(res, 200, "My requests retrieved", result);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const getOne = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const request = await requestService.getRequestById(req.params.id as string);

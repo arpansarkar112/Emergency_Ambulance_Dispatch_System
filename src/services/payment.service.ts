@@ -11,6 +11,10 @@ export const createPaymentByAdmin = async (requestId: string, amount: number) =>
   const request = await prisma.emergencyRequest.findUnique({ where: { id: requestId } });
   if (!request) throw Object.assign(new Error("Request not found"), { statusCode: 404 });
   
+  if (request.status !== "COMPLETED") {
+    throw Object.assign(new Error("Payment bill can only be generated for COMPLETED requests"), { statusCode: 400 });
+  }
+
   return await prisma.payment.create({
     data: {
       requestId,

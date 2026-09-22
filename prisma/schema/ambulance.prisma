@@ -17,7 +17,7 @@ model Ambulance {
   status         AmbulanceStatus @default(AVAILABLE)
   driverId String?
   driver         User?           @relation(fields: [driverId], references: [id])
-  currentAddress String?
+  currentAddress String
 
   dispatches     Dispatch[]
   createdAt      DateTime        @default(now())

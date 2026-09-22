@@ -36,7 +36,7 @@ export const getOne = async (req: Request, res: Response, next: NextFunction) =>
 export const update = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { ambulanceId, ...data } = req.body;
-    const ambulance = await ambulanceService.updateAmbulance(ambulanceId, data);
+    const ambulance = await ambulanceService.updateAmbulance(ambulanceId, data, req.user!.userId, req.user!.role);
     sendSuccess(res, 200, "Ambulance updated successfully", ambulance);
   } catch (error) {
     next(error);

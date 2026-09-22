@@ -37,9 +37,13 @@ export const getAmbulanceById = async (id: string) => {
   return ambulance;
 };
 
-export const updateAmbulance = async (id: string, data: any) => {
+export const updateAmbulance = async (id: string, data: any, userId: string, role: string) => {
   const ambulance = await prisma.ambulance.findFirst({ where: { id, deletedAt: null } });
   if (!ambulance) throw Object.assign(new Error("Ambulance not found"), { statusCode: 404 });
+
+  if (role === "DRIVER" && ambulance.driverId !== userId) {
+    throw Object.assign(new Error("You are not authorized to update this ambulance because it is not assigned to you."), { statusCode: 403 });
+  }
 
   return await prisma.ambulance.update({
     where: { id },

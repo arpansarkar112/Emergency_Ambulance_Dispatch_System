@@ -21,7 +21,7 @@ model EmergencyRequest {
   patientPhone    String
   pickupAddress String
 
-  destinationAddress String?
+  destinationAddress String
 
   priority        Priority      @default(MEDIUM)
   status          RequestStatus @default(PENDING)

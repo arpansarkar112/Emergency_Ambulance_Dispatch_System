@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { create, getAll, getOne, assign, updateStatus, cancel } from "../controllers/request.controller";
+import { create, getAll, getOne, assign, updateStatus, cancel, getMyRequests } from "../controllers/request.controller";
 import { authenticate, authorize } from "../middlewares/auth";
 import { validateRequest } from "../middlewares/validateRequest";
 import { createRequestSchema, assignRequestSchema, updateRequestStatusSchema } from "../schemas/request.schema";
@@ -13,6 +13,7 @@ router.post("/", authorize("PATIENT"), validateRequest(createRequestSchema), cre
 router.delete("/:id", authorize("PATIENT", "ADMIN"), cancel);
 
 // Admin & Driver
+router.get("/my-requests", authorize("DRIVER", "PATIENT"), getMyRequests);
 router.get("/", authorize("ADMIN", "DRIVER"), getAll);
 router.get("/:id", getOne);
 

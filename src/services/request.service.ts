@@ -27,6 +27,16 @@ export const getRequests = async (page: number, limit: number, status?: string) 
   return { requests, total };
 };
 
+export const getRequestsByDriver = async (driverId: string) => {
+  return await prisma.emergencyRequest.findMany({
+    where: { 
+      deletedAt: null,
+      dispatches: { some: { driverId } }
+    },
+    include: { patient: { select: { email: true, profile: true } } }
+  });
+};
+
 export const getRequestById = async (id: string) => {
   const request = await prisma.emergencyRequest.findFirst({
     where: { id, deletedAt: null },
@@ -50,6 +60,14 @@ export const assignAmbulance = async (requestId: string, ambulanceId: string, ad
     const ambulance = await tx.ambulance.findFirst({ where: { id: ambulanceId, status: AmbulanceStatus.AVAILABLE } });
     if (!ambulance || !ambulance.driverId) {
       throw Object.assign(new Error("Ambulance is not available or has no driver"), { statusCode: 400 });
+    }
+
+    if ((request.priority === "HIGH" || request.priority === "CRITICAL") && ambulance.type !== "ICU") {
+      throw Object.assign(new Error("High and Critical priority requests require an ICU ambulance"), { statusCode: 400 });
+    }
+
+    if ((request.priority === "LOW" || request.priority === "MEDIUM") && ambulance.type !== "BASIC") {
+      throw Object.assign(new Error("Low and Medium priority requests require a BASIC ambulance"), { statusCode: 400 });
     }
 
     // Assign and update status
