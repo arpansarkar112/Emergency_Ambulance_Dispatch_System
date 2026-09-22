@@ -3,7 +3,7 @@ import { prisma } from "../lib/prisma";
 import config from "../config";
 import { PaymentStatus } from "../../generated/prisma/client";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "sk_test_dummy", {
   apiVersion: "2026-08-26.dahlia" as any,
 });
 
