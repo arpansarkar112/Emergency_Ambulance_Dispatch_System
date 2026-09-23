@@ -35,24 +35,30 @@ export const initiatePayment = async (patientId: string, patientEmail: string, r
     throw Object.assign(new Error("No pending payment found for this request. Please wait for admin to generate the bill."), { statusCode: 404 });
   }
 
-  const session = await stripe.checkout.sessions.create({
-    payment_method_types: ["card"],
-    mode: "payment",
-    customer_email: patientEmail,
-    line_items: [
-      {
-        price_data: {
-          currency: "usd",
-          product_data: { name: `Ambulance Service Request #${requestId}` },
-          unit_amount: Math.round(payment.amount * 100),
+    const appUrl = config.app_url || `http://localhost:${config.port || 5000}`;
+    
+    if (!appUrl.startsWith('http://') && !appUrl.startsWith('https://')) {
+      throw Object.assign(new Error("Server configuration error: APP_URL must include an explicit scheme (http:// or https://)"), { statusCode: 500 });
+    }
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      mode: "payment",
+      customer_email: patientEmail,
+      line_items: [
+        {
+          price_data: {
+            currency: "usd",
+            product_data: { name: `Ambulance Service Request #${requestId}` },
+            unit_amount: Math.round(payment.amount * 100),
+          },
+          quantity: 1,
         },
-        quantity: 1,
-      },
-    ],
-    success_url: `${config.app_url}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${config.app_url}/payment/cancel`,
-    metadata: { requestId, patientId, paymentId: payment.id }
-  });
+      ],
+      success_url: `${appUrl}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${appUrl}/payment/cancel`,
+      metadata: { requestId, patientId, paymentId: payment.id }
+    });
 
   await prisma.payment.update({
     where: { id: payment.id },
