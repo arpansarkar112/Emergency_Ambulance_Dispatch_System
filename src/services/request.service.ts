@@ -125,6 +125,14 @@ export const assignAmbulance = async (requestId: string, ambulanceId: string, ad
       throw Object.assign(new Error(`Ambulance ${ambulance.vehicleNumber} has no driver assigned. Please assign a driver first.`), { statusCode: 400 });
     }
 
+    if ((request.priority === "HIGH" || request.priority === "CRITICAL") && ambulance.type !== "ICU") {
+      throw Object.assign(new Error("High and Critical priority requests require an ICU ambulance"), { statusCode: 400 });
+    }
+
+    if ((request.priority === "LOW" || request.priority === "MEDIUM") && ambulance.type !== "BASIC") {
+      throw Object.assign(new Error("Low and Medium priority requests require a BASIC ambulance"), { statusCode: 400 });
+    }
+
     // Assign and update status
     await tx.emergencyRequest.update({
       where: { id: requestId },
