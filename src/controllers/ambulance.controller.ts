@@ -14,7 +14,7 @@ export const create = async (req: Request, res: Response, next: NextFunction) =>
 export const getAll = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 10;
+    const limit = parseInt(req.query.limit as string) || 100;
     const status = req.query.status as string;
     
     const result = await ambulanceService.getAmbulances(page, limit, status);
@@ -36,7 +36,11 @@ export const getOne = async (req: Request, res: Response, next: NextFunction) =>
 export const update = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { ambulanceId, ...data } = req.body;
-    const ambulance = await ambulanceService.updateAmbulance(ambulanceId, data, req.user!.userId, req.user!.role);
+    const targetId = (req.params.id as string) || ambulanceId;
+    if (!targetId) {
+      throw Object.assign(new Error("Ambulance ID is required"), { statusCode: 400 });
+    }
+    const ambulance = await ambulanceService.updateAmbulance(targetId, data, req.user!.userId, req.user!.role);
     sendSuccess(res, 200, "Ambulance updated successfully", ambulance);
   } catch (error) {
     next(error);

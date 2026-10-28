@@ -5,7 +5,7 @@ import { sendSuccess } from "../utils/response";
 export const adminCreatePayment = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { requestId, amount } = req.body;
-    const payment = await paymentService.createPaymentByAdmin(requestId, amount);
+    const payment = await paymentService.createPaymentByAdmin(requestId, Number(amount));
     sendSuccess(res, 201, "Payment bill generated successfully", payment);
   } catch (error) {
     next(error);
@@ -14,10 +14,20 @@ export const adminCreatePayment = async (req: Request, res: Response, next: Next
 
 export const initiate = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { requestId } = req.body;
+    const { requestId, originUrl } = req.body;
     const patientEmail = req.user!.email || "patient@example.com";
-    const result = await paymentService.initiatePayment(req.user!.userId, patientEmail, requestId);
+    const resolvedOrigin = originUrl || req.headers.origin || undefined;
+    const result = await paymentService.initiatePayment(req.user!.userId, patientEmail, requestId, resolvedOrigin);
     sendSuccess(res, 200, "Payment initiated", result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const listPayments = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const payments = await paymentService.getAllPayments(req.user!.userId, req.user!.role);
+    sendSuccess(res, 200, "Payments retrieved", payments);
   } catch (error) {
     next(error);
   }

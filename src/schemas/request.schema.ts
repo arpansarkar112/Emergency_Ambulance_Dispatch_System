@@ -12,7 +12,7 @@ export const createRequestSchema = z.object({
 export const updateRequestStatusSchema = z.object({
   body: z.object({
     requestId: z.string().uuid("Request ID must be a valid UUID"),
-    status: z.string().refine(val => ["ASSIGNED", "EN_ROUTE", "PICKED_UP", "COMPLETED", "CANCELLED"].includes(val), {
+    status: z.string().refine(val => ["ASSIGNED", "EN_ROUTE", "PICKED_UP", "ARRIVED", "IN_TRANSIT", "COMPLETED", "CANCELLED"].includes(val), {
         message: "Invalid status. Expected one of ASSIGNED, EN_ROUTE, PICKED_UP, COMPLETED, CANCELLED"
     }),
   })

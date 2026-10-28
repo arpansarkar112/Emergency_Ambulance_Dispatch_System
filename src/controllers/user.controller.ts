@@ -23,7 +23,7 @@ export const updateMe = async (req: Request, res: Response, next: NextFunction) 
 export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 10;
+    const limit = parseInt(req.query.limit as string) || 100;
     const role = req.query.role as string;
     
     const result = await userService.getAllUsers(page, limit, role);

@@ -9,10 +9,10 @@ const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const generateTokens = (userId: string, email: string, role: Role) => {
   const accessToken = jwt.sign({ userId, email, role }, config.jwt_access_secret as string, {
-    expiresIn: config.jwt_access_expires_in as any,
+    expiresIn: "7d",
   });
   const refreshToken = jwt.sign({ userId, email, role }, config.jwt_refresh_secret as string, {
-    expiresIn: config.jwt_refresh_expires_in as any,
+    expiresIn: (config.jwt_refresh_expires_in || "7d") as any,
   });
   return { accessToken, refreshToken };
 };

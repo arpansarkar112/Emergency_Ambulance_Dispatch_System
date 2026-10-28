@@ -14,7 +14,7 @@ export const create = async (req: Request, res: Response, next: NextFunction) =>
 export const getAll = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 10;
+    const limit = parseInt(req.query.limit as string) || 100;
     const status = req.query.status as string;
     
     const result = await requestService.getRequests(page, limit, status);
@@ -26,7 +26,11 @@ export const getAll = async (req: Request, res: Response, next: NextFunction) =>
 
 export const getMyRequests = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await requestService.getRequestsByDriver(req.user!.userId);
+    const { userId, role } = req.user!;
+    const result =
+      role === "PATIENT"
+        ? await requestService.getRequestsByPatient(userId)
+        : await requestService.getRequestsByDriver(userId);
     sendSuccess(res, 200, "My requests retrieved", result);
   } catch (error) {
     next(error);

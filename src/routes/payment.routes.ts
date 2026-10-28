@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { adminCreatePayment, initiate, getStatus, verifySession } from "../controllers/payment.controller";
+import { adminCreatePayment, initiate, getStatus, verifySession, listPayments } from "../controllers/payment.controller";
 import { authenticate, authorize } from "../middlewares/auth";
 import { validateRequest } from "../middlewares/validateRequest";
 import { adminCreatePaymentSchema, initiatePaymentSchema, paymentStatusSchema, verifySessionSchema } from "../schemas/payment.schema";
@@ -7,6 +7,9 @@ import { adminCreatePaymentSchema, initiatePaymentSchema, paymentStatusSchema, v
 const router = Router();
 
 router.use(authenticate);
+
+// List payments
+router.get("/", listPayments);
 
 // Admin creates payment bill
 router.post("/create", authorize("ADMIN"), validateRequest(adminCreatePaymentSchema), adminCreatePayment);
