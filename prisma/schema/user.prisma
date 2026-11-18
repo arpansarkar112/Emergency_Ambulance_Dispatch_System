@@ -5,17 +5,18 @@ enum Role {
 }
 
 model User {
-  id String @id @default(uuid())
-  email     String    @unique
-  password  String
-  role      Role      @default(PATIENT)
-  isVerified Boolean  @default(false)
-  profile   Profile?
+  id         String             @id @default(uuid())
+  email      String             @unique
+  password   String
+  role       Role               @default(PATIENT)
+  isVerified Boolean            @default(false)
+  profile    Profile?
   ambulances Ambulance[]
-  requests  EmergencyRequest[]
+  requests   EmergencyRequest[]
   dispatches Dispatch[]
-  auditLogs AuditLog[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
+  auditLogs  AuditLog[]
+  reviews    Review[]
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+  deletedAt  DateTime?
 }

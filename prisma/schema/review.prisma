@@ -1,0 +1,13 @@
+model Review {
+  id          String    @id @default(uuid())
+  ambulanceId String
+  ambulance   Ambulance @relation(fields: [ambulanceId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rating      Int
+  title       String?
+  comment     String
+  verified    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}

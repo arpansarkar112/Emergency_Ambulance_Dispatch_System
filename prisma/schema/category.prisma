@@ -1,0 +1,13 @@
+model Category {
+  id             String        @id @default(uuid())
+  name           String        @unique
+  slug           String        @unique
+  ambulanceType  AmbulanceType @default(BASIC)
+  description    String
+  basePriceRange String        @default("$80 - $150")
+  responseSla    String        @default("Under 10 mins")
+  imageUrl       String?
+  ambulances     Ambulance[]
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}

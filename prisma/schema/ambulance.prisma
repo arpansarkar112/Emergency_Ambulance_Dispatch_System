@@ -11,15 +11,28 @@ enum AmbulanceStatus {
 }
 
 model Ambulance {
-  id String @id @default(uuid())
+  id             String          @id @default(uuid())
   vehicleNumber  String          @unique
+  title          String?
+  description    String?
   type           AmbulanceType   @default(BASIC)
   status         AmbulanceStatus @default(AVAILABLE)
-  driverId String?
+  basePrice      Float           @default(120)
+  rating         Float           @default(4.8)
+  reviewCount    Int             @default(0)
+  images         String[]        @default([])
+  specifications String[]        @default([])
+  capacity       Int             @default(2)
+  responseTime   String          @default("6-9 mins")
+  featured       Boolean         @default(false)
+  categoryId     String?
+  category       Category?       @relation(fields: [categoryId], references: [id])
+  driverId       String?
   driver         User?           @relation(fields: [driverId], references: [id])
   currentAddress String
 
   dispatches     Dispatch[]
+  reviews        Review[]
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
   deletedAt      DateTime?
