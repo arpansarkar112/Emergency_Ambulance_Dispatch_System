@@ -47,7 +47,10 @@ export const registerUser = async (data: any) => {
 };
 
 export const loginUser = async (data: any) => {
-  const user = await prisma.user.findUnique({ where: { email: data.email } });
+  const user = await prisma.user.findUnique({
+    where: { email: data.email },
+    include: { profile: true },
+  });
   if (!user) throw Object.assign(new Error("Invalid credentials"), { statusCode: 401 });
   if (user.deletedAt) throw Object.assign(new Error("Account is disabled. Please contact support."), { statusCode: 403 });
   
@@ -58,8 +61,19 @@ export const loginUser = async (data: any) => {
   const isMatch = await bcrypt.compare(data.password, user.password);
   if (!isMatch) throw Object.assign(new Error("Invalid credentials"), { statusCode: 401 });
 
+  const fullName = [user.profile?.firstName, user.profile?.lastName].filter(Boolean).join(" ");
   const tokens = generateTokens(user.id, user.email, user.role);
-  return { user: { id: user.id, email: user.email, role: user.role }, ...tokens };
+  return {
+    user: {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      name: fullName || user.email.split("@")[0],
+      avatarUrl: user.profile?.avatarUrl || null,
+      profile: user.profile,
+    },
+    ...tokens,
+  };
 };
 
 export const socialLogin = async (idToken: string) => {

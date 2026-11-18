@@ -16,7 +16,7 @@ export const getAll = async (req: Request, res: Response, next: NextFunction) =>
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 100;
     const status = req.query.status as string;
-    
+
     const result = await requestService.getRequests(page, limit, status);
     sendSuccess(res, 200, "Requests retrieved", result);
   } catch (error) {
@@ -37,10 +37,33 @@ export const getMyRequests = async (req: Request, res: Response, next: NextFunct
   }
 };
 
+export const getMyStats = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { userId, role } = req.user!;
+    const result = await requestService.getMyStats(userId, role);
+    sendSuccess(res, 200, "Personal dispatch analytics retrieved", result);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const getOne = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const request = await requestService.getRequestById(req.params.id as string);
     sendSuccess(res, 200, "Request fetched", request);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const update = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const updated = await requestService.updatePatientRequest(
+      req.params.id as string,
+      req.user!.userId,
+      req.body
+    );
+    sendSuccess(res, 200, "Emergency request updated", updated);
   } catch (error) {
     next(error);
   }

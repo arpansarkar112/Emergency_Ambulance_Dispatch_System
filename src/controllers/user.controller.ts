@@ -20,14 +20,49 @@ export const updateMe = async (req: Request, res: Response, next: NextFunction) 
   }
 };
 
+export const updatePassword = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    const result = await userService.changeMyPassword(
+      req.user!.userId,
+      currentPassword,
+      newPassword
+    );
+    sendSuccess(res, 200, "Password updated successfully", result);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 100;
-    const role = req.query.role as string;
-    
-    const result = await userService.getAllUsers(page, limit, role);
+    const page = Math.max(1, parseInt(req.query.page as string) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit as string) || 100));
+    const role = req.query.role as string | undefined;
+    const search = req.query.search as string | undefined;
+    const includeDisabled = req.query.includeDisabled === "true";
+
+    const result = await userService.getAllUsers(page, limit, role, search, includeDisabled);
     sendSuccess(res, 200, "Users retrieved successfully", result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const toggleStatus = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { active } = req.body;
+    const updated = await userService.toggleUserStatus(
+      req.params.id as string,
+      Boolean(active),
+      req.user!.userId
+    );
+    sendSuccess(
+      res,
+      200,
+      active ? "User account restored" : "User account disabled",
+      updated
+    );
   } catch (error) {
     next(error);
   }

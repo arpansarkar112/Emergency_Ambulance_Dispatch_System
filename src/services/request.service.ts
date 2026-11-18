@@ -270,3 +270,110 @@ export const cancelRequest = async (id: string) => {
     });
   });
 };
+
+export const updatePatientRequest = async (id: string, patientId: string, data: any) => {
+  const existing = await prisma.emergencyRequest.findFirst({
+    where: { id, deletedAt: null },
+  });
+  if (!existing) throw Object.assign(new Error("Request not found"), { statusCode: 404 });
+  if (existing.patientId !== patientId) {
+    throw Object.assign(new Error("You are not authorized to edit this request."), { statusCode: 403 });
+  }
+  if (existing.status !== RequestStatus.PENDING) {
+    throw Object.assign(new Error("Only pending requests can be edited before ambulance dispatch."), {
+      statusCode: 400,
+    });
+  }
+
+  const updated = await prisma.emergencyRequest.update({
+    where: { id },
+    data: {
+      ...(data.patientPhone ? { patientPhone: data.patientPhone.trim() } : {}),
+      ...(data.pickupAddress ? { pickupAddress: data.pickupAddress.trim() } : {}),
+      ...(data.destinationAddress ? { destinationAddress: data.destinationAddress.trim() } : {}),
+      ...(data.priority ? { priority: data.priority } : {}),
+    },
+    include: requestInclude,
+  });
+
+  return formatRequest(updated);
+};
+
+export const getMyStats = async (userId: string, role: string) => {
+  const requests =
+    role === "DRIVER"
+      ? await getRequestsByDriver(userId)
+      : await getRequestsByPatient(userId);
+
+  const totalRequests = requests.length;
+  const activeRequests = requests.filter(
+    (r: any) => !["COMPLETED", "CANCELLED"].includes(r.status)
+  ).length;
+  const completedRequests = requests.filter((r: any) => r.status === "COMPLETED").length;
+
+  const totalPaid = requests.reduce((sum: number, r: any) => {
+    const isPaid = r.payment?.status === "SUCCESS" || r.paymentStatus === "SUCCESS";
+    return sum + (isPaid ? Number(r.amount || 0) : 0);
+  }, 0);
+
+  const pendingAmount = requests.reduce((sum: number, r: any) => {
+    const isPaid = r.payment?.status === "SUCCESS" || r.paymentStatus === "SUCCESS";
+    return sum + (!isPaid && Number(r.amount || 0) > 0 ? Number(r.amount || 0) : 0);
+  }, 0);
+
+  const criticalityCounts: Record<string, number> = {
+    CRITICAL: 0,
+    HIGH: 0,
+    MEDIUM: 0,
+    LOW: 0,
+  };
+  const statusCounts: Record<string, number> = {
+    PENDING: 0,
+    ASSIGNED: 0,
+    EN_ROUTE: 0,
+    PICKED_UP: 0,
+    COMPLETED: 0,
+    CANCELLED: 0,
+  };
+
+  requests.forEach((r: any) => {
+    if (r.priority && r.priority in criticalityCounts) {
+      criticalityCounts[r.priority] = (criticalityCounts[r.priority] ?? 0) + 1;
+    }
+    if (r.status && r.status in statusCounts) {
+      statusCounts[r.status] = (statusCounts[r.status] ?? 0) + 1;
+    }
+  });
+
+  const now = new Date();
+  const monthlyTrend: { key: string; label: string; requests: number; amount: number }[] = [];
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    const label = d.toLocaleString("en-US", { month: "short" });
+    monthlyTrend.push({ key, label, requests: 0, amount: 0 });
+  }
+  const map = new Map(monthlyTrend.map((m) => [m.key, m]));
+  requests.forEach((r: any) => {
+    const d = new Date(r.createdAt);
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    const bucket = map.get(key);
+    if (bucket) {
+      bucket.requests += 1;
+      bucket.amount += Number(r.amount || 0);
+    }
+  });
+
+  return {
+    summary: {
+      totalRequests,
+      activeRequests,
+      completedRequests,
+      totalPaid,
+      pendingAmount,
+    },
+    criticalityBreakdown: Object.entries(criticalityCounts).map(([name, value]) => ({ name, value })),
+    statusBreakdown: Object.entries(statusCounts).map(([name, value]) => ({ name, value })),
+    monthlyTrend,
+  };
+};
